@@ -1,0 +1,5 @@
+extends layout
+block content
+    form(ref='uploadForm' id='uploadForm' action='/calc/data' method='post' encType="multipart/form-data")
+        input( type="file" name="sampleFile")
+        input( type='submit' value='Upload!')
