@@ -1,0 +1,3 @@
+function BaseCtrl(app){
+
+}
