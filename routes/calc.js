@@ -1,12 +1,19 @@
 var express = require('express');
 var router = express.Router();
 var fs = require('fs');
-var regex = require('xregexp');
-var parser = require('lua2js');
 
-/* GET users listing. */
-router.get('/', function (req, res, next) {
-  res.send('respond with a resource');
+/* get vanilla json */
+router.get('/vanilla', function (req, res, next) {
+  var json = fileToJson('./factorio-current.log', function(json, err){
+    if(err){
+      res.status(500);
+      res.send('something went wrong');
+    } else {
+      res.status(200);
+      res.send(json);
+    }
+
+  })
 });
 
 
@@ -24,7 +31,7 @@ router.post('/data', function (req, res, next) {
       console.log(err);
       res.send('Could not upload your file');
     } else {
-      json = fileToJson(filepath, function (json, err) {
+      var json = fileToJson(filepath, function (json, err) {
         if (err) {
           fs.unlink(filepath, function (err) {
             if (err) {

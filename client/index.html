@@ -1,35 +1,43 @@
 <html>
-    <head>
-        <!-- Latest compiled and minified CSS -->
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 
-<!-- Optional theme -->
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+        crossorigin="anonymous">
 
-<!-- Latest compiled and minified JavaScript -->
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
-    </head>
-    <body>
-        <div id="searchBar">
-            <input type="text" placeholder="search for your item"/>
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp"
+        crossorigin="anonymous">
+
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+        crossorigin="anonymous"></script>
+
+</head>
+
+<body>
+    <div id="searchBar">
+        <input type="text" placeholder="search for your item" />
+    </div>
+    <div id="newModSet">
+        <form ref='uploadForm' id='uploadForm' method='post' encType="multipart/form-data">
+            <input type="file" name="sampleFile" />
+            <input type="text" name="modSet" placeholder="Name for set of mods" />
+            <input type='submit' value='Upload!' />
+        </form>
+    </div>
+    <div class="container">
+        <div id="buildings">
+            
         </div>
-        <div id="newModSet">
-            <form ref='uploadForm' 
-                id='uploadForm' 
-                method='post' 
-                encType="multipart/form-data">
-                    <input type="file" name="sampleFile" />
-                    <input type="text" name="modSet" placeholder="Name for set of mods"/>
-                    <input type='submit' value='Upload!' />
-            </form>	
-        </div>
-        <div class="container" id="buildings">
-            <p> some text here </p>
-        </div>
-        <script src="/controllers/BaseCtrl.js"></script>
-        <script src="/App.js"></script>
-        <script>
+        <p> some text here </p>
+    </div>
+    <script src="/controllers/BaseCtrl.js"></script>
+    <script src="/App.js"></script>
+    <script>
 
         </script>
-    </body>
+</body>
+
 </html>
