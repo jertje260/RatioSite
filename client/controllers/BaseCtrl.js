@@ -29,27 +29,47 @@ function BaseCtrl(app){
                 self.categories[cat[j]].machines.push(self.data.assemblingMachines[i]);
             }
         }
+        $("#buildings").empty();
         console.log(self.categories);
-        for(var i = 0; i< self.categories.length; i++){
-            
-            var machine = self.findBestMachineForCategory(self.categories[i]);
+        for(var prop in self.categories){
+            if(self.categories[prop].machines.length > 1){
+                var machine = self.findBestMachineForCategory(prop);
+                // add up for selection
+                self.addForMachineSelection(prop, machine.name);
+                console.log(machine);
+            }
         }
     }
 
     self.findBestMachineForCategory = function(cat){
-        var machine
-        for(var i = 0; i < cat.machines.length; i++){
+        var machine;
+        for(var i = 0; i < self.categories[cat].machines.length; i++){
             if(machine === undefined){
-                machine = cat.machines[i];
+                machine = self.categories[cat].machines[i];
             }else {
-                if(cat.machines[i].speed > machine.speed){
-                    machine = cat.machines[i];
+                if(self.categories[cat].machines[i].speed > machine.speed){
+                    machine = self.categories[cat].machines[i];
                 }
             }
         }
         return machine;
     }
 
+    self.addForMachineSelection = function(cat, defaultMachine){
+        $.get("/html/select.html").done(function(data){
+            $("#buildings").append(data);
+            $("#new").attr("id", cat);
+            var select = $("#"+cat);  
+            var machines = self.categories[cat].machines;   
+            for(var i = 0; i < machines.length; i++){
+                if(machines[i].name == defaultMachine){
+                    $("<option />", {value: machines[i].name, text: machines[i].name, selected: true}).appendTo(select);
+                }else {
+                    $("<option />", {value: machines[i].name, text: machines[i].name }).appendTo(select);
+                }
+            }
+        });
+    }
 
     self.getDefaultJson();
 }
