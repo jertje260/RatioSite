@@ -13,13 +13,22 @@
     <!-- Latest compiled and minified JavaScript -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
         crossorigin="anonymous"></script>
-
+    <link rel="stylesheet" href="/css/base.css">
 </head>
 
 <body>
-    <div id="searchBar">
-        <input type="text" placeholder="search for your item" />
+    
+    <div id="custom-search-input">
+        <div class="input-group col-md-12">
+            <input type="text" class="form-control input-lg" id="searchBar" placeholder="search for your item" />
+            <span class="input-group-btn">
+                        <button class="btn btn-info btn-lg" type="button">
+                            <i class="glyphicon glyphicon-search"></i>
+                        </button>
+                    </span>
+        </div>
     </div>
+
     <div id="newModSet">
         <form ref='uploadForm' id='uploadForm' method='post' encType="multipart/form-data">
             <input type="file" name="sampleFile" />
@@ -29,15 +38,18 @@
     </div>
     <div class="container">
         <div id="buildings">
-            
+
         </div>
-        <p> some text here </p>
+        <div id="calculations">
+        </div>
     </div>
     <script src="/controllers/BaseCtrl.js"></script>
     <script src="/App.js"></script>
     <script>
+        $("#searchBar").on('keyup', function(){
 
-        </script>
+        });
+    </script>
 </body>
 
 </html>

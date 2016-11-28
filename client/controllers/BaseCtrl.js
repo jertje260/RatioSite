@@ -59,7 +59,10 @@ function BaseCtrl(app){
         $.get("/html/select.html").done(function(data){
             $("#buildings").append(data);
             $("#new").attr("id", cat);
+            $("#newLabel").attr("id", cat + "Label");
+            $("#" + cat + "Label").html(cat);
             var select = $("#"+cat);  
+            select.attr("name", cat);
             var machines = self.categories[cat].machines;   
             for(var i = 0; i < machines.length; i++){
                 if(machines[i].name == defaultMachine){
