@@ -65,10 +65,20 @@ function fileToJson(filepath, callback) {
     //console.log(data.toString())
     var obj = JSON.parse(newData);
     var returnVal = updateTechs(obj);
-    callback(obj, null);
+    var rVal = updateRecipes(returnVal);
+    callback(rVal, null);
 
   });
 
+}
+
+function updateRecipes(obj){
+  for(var i =0; i < obj.recipes.length; i++){
+    if(obj.recipes[i].category === undefined){
+      obj.recipes[i].category = "crafting";
+    }
+  }
+  return obj;
 }
 
 function readFile(filepath, callback) {
@@ -115,6 +125,7 @@ function updateTechs(obj) {
     }
   }
   obj.technologies = null;
+  return obj;
 }
 
 function unlockRecipe(obj, recipeName) {

@@ -3,4 +3,4 @@ function App(){
     self.ctrl = new BaseCtrl(self);
 
 }
-new App();
+var app = new App();

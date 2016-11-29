@@ -17,13 +17,15 @@
 </head>
 
 <body>
-    
+
     <div id="custom-search-input">
         <div class="input-group col-md-12">
-            <input type="text" class="form-control input-lg" id="searchBar" placeholder="search for your item" />
+            <input type="text" class="form-control input-lg" id="searchBar" list="recipesList" placeholder="search for your item" />
+            <datalist id="recipesList">
+            </datalist>
             <span class="input-group-btn">
-                        <button class="btn btn-info btn-lg" type="button">
-                            <i class="glyphicon glyphicon-search"></i>
+                        <button id="addRecipe" class="btn btn-info btn-lg" type="button">
+                            <i class="glyphicon glyphicon-plus"></i>
                         </button>
                     </span>
         </div>
@@ -40,15 +42,19 @@
         <div id="buildings">
 
         </div>
+
+        <div id="goals">
+            <!-- set if item based, per second/minute/hour -->
+            <div id="goalList">
+            </div>
+        </div>
         <div id="calculations">
         </div>
     </div>
+    <script src="/CoreFiles/CoreCalculator.js"></script>
     <script src="/controllers/BaseCtrl.js"></script>
     <script src="/App.js"></script>
     <script>
-        $("#searchBar").on('keyup', function(){
-
-        });
     </script>
 </body>
 
