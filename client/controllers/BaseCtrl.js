@@ -74,5 +74,15 @@ function BaseCtrl(app){
         });
     }
 
+    self.findItem = function(input){
+        input = input.replace(' ', '-');
+        var items = [];
+        for(var i = 0; i <self.data.recipes.length; i++){
+            if(self.data.recipes[i].name.search(input) !== -1){
+                items.push(self.data.recipes[i]);
+            }
+        }
+    }
+
     self.getDefaultJson();
 }
