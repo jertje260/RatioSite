@@ -43,9 +43,6 @@ function CoreCalculator(ctrl) {
 
         }
         retObj.crafts = amount / resultAmount;
-        if(isNaN(retObj.crafts)){
-            var i = 0;
-        }
         retObj.name = r.name;
         retObj.itemName = recipeId;
         //var craftspeed = self.calculateCraftSpeed()

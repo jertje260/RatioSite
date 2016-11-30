@@ -32,7 +32,8 @@ function BaseCtrl(app) {
         $("#addRecipe").click(function () {
             var option = $('option[value="' + $("#searchBar").val() + '"]');
             var id = option.attr('id');
-            var item = self.findItemById(id)
+            var item = {};
+            item.name = id;
             item.amount = 1;
             self.goals.push(item);
             self.addGoalHtml(item);
