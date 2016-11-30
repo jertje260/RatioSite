@@ -4,8 +4,8 @@ var fs = require('fs');
 
 /* get vanilla json */
 router.get('/vanilla', function (req, res, next) {
-  var json = fileToJson('./factorio-current.log', function(json, err){
-    if(err){
+  var json = fileToJson('./factorio-current.log', function (json, err) {
+    if (err) {
       res.status(500);
       res.send('something went wrong');
     } else {
@@ -66,15 +66,36 @@ function fileToJson(filepath, callback) {
     var obj = JSON.parse(newData);
     var returnVal = updateTechs(obj);
     var rVal = updateRecipes(returnVal);
-    callback(rVal, null);
+    var retVal = createItems(rVal);
+    callback(retVal, null);
 
   });
 
 }
 
-function updateRecipes(obj){
-  for(var i =0; i < obj.recipes.length; i++){
-    if(obj.recipes[i].category === undefined){
+function createItems(obj) {
+  obj.items = [];
+  for (var i = 0; i < obj.recipes.length; i++) {
+    if (obj.recipes[i].result !== undefined) {
+      if (obj.items.indexOf(obj.recipes[i].result)=== -1) {
+        obj.items.push(obj.recipes[i].result);
+      }
+    } else if (obj.recipes[i].results !== undefined) {
+      for (var j = 0; j < obj.recipes[i].results.length; j++) {
+        if (obj.items.indexOf(obj.recipes[i].results[j].name)=== -1) {
+            obj.items.push(obj.recipes[i].results[j].name);
+        }
+
+      }
+    }
+  }
+  console.log('items', obj.items.length);
+  return obj;
+}
+
+function updateRecipes(obj) {
+  for (var i = 0; i < obj.recipes.length; i++) {
+    if (obj.recipes[i].category === undefined) {
       obj.recipes[i].category = "crafting";
     }
   }
