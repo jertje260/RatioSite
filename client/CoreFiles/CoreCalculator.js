@@ -21,8 +21,8 @@ function CoreCalculator(ctrl) {
         self.output = {};
     }
 
-    self.calculateItemFromId = function (recipeId, amount) {
-        var r = self.findRecipeByItemId(recipeId);
+    self.calculateItemFromId = function (itemId, amount) {
+        var r = self.findRecipeByItemId(itemId);
         if (r == null) {
             return null;
         }
@@ -32,7 +32,7 @@ function CoreCalculator(ctrl) {
             resultAmount = r.resultCount != undefined ? r.resultCount : 1;
         } else if (r.results !== undefined) {
             for (var i = 0; i < r.results.length; i++) {
-                if (r.results[i].name == recipeId) {
+                if (r.results[i].name == itemId) {
                     if(r.results[i].amount !== undefined){
                         resultAmount = r.results[i].amount;
                     } else if(r.results[i].amountMin !== undefined){
@@ -44,7 +44,9 @@ function CoreCalculator(ctrl) {
         }
         retObj.crafts = amount / resultAmount;
         retObj.name = r.name;
-        retObj.itemName = recipeId;
+        retObj.itemName = itemId;
+        
+
         //var craftspeed = self.calculateCraftSpeed()
         retObj.ingredients = [];
         if (r.ingredients !== undefined) {

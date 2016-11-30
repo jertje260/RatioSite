@@ -6,6 +6,7 @@ function BaseCtrl(app) {
     self.calculator = new CoreCalculator(self);
     self.calculated = {};
     self.groupid = 1;
+    self.defaultMachines = [];
 
     self.getDefaultJson = function () {
         $.get({
@@ -118,6 +119,7 @@ function BaseCtrl(app) {
             var machines = self.categories[cat].machines;
             for (var i = 0; i < machines.length; i++) {
                 if (machines[i].name == defaultMachine) {
+
                     $("<option />", { value: machines[i].name, text: machines[i].name, selected: true }).appendTo(select);
                 } else {
                     $("<option />", { value: machines[i].name, text: machines[i].name }).appendTo(select);
