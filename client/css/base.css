@@ -63,3 +63,14 @@
 .list-group-item .glyphicon {
     margin-right: 5px;
 }
+
+.right {
+    float: right;
+}
+a.default-text-color{
+    color: inherit;
+}
+
+.link {
+    cursor: pointer;
+}

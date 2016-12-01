@@ -38,14 +38,25 @@
             <input type='submit' value='Upload!' />
         </form>
     </div>
-    <div class="container">
-        <div id="buildings">
+    <div class="container">'
+        <div class="panel panel-primary">
+            <div class="panel-heading link" data-toggle="collapse" data-target="#buildings">
+                Categories with their default machines.
+            </div>
+            <ul id="buildings" class="list-group collapse">
 
+            </ul>
         </div>
-
-        <div id="goals">
-            <!-- set if item based, per second/minute/hour -->
-            <div id="goalList">
+        <div class="panel panel-primary">
+            <div class="panel-heading link" data-toggle="collapse" data-target=".goal-panels">
+                Current targets
+            </div>
+                <div id="goals" class="panel goal-panels">
+                    
+                    <!-- set if item based, per second/minute/hour -->
+                </div>
+                <div id="goalList" class="panel goal-panels">
+                </div>
             </div>
         </div>
         <div id="calculations">
