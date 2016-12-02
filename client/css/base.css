@@ -74,3 +74,8 @@ a.default-text-color{
 .link {
     cursor: pointer;
 }
+
+.goalBlock {
+    padding-left: 10px;
+    padding-right: 10px;
+}

@@ -132,7 +132,7 @@ function BaseCtrl(app) {
         $.get("/html/goal.html").done(function (data) {
             $("#goalList").append(data);
             $("#goal").attr("id", "div" + goal.name);
-            $("#newGoal").html(self.nameToNiceName(goal.name));
+            $("#newGoal").html(self.nameToNiceName(goal.name) + " amount:");
             $("#newGoal").attr("id", goal.name + "Label");
             $("#newGoalAmount").attr("id", goal.name + "Amount");
             $("#removeGoal").attr("id", "remove" + goal.name);
