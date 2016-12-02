@@ -51,16 +51,23 @@
             <div class="panel-heading link" data-toggle="collapse" data-target=".goal-panels">
                 Current targets
             </div>
-                <div id="goals" class="panel goal-panels">
-                    
-                    <!-- set if item based, per second/minute/hour -->
-                </div>
-                <div id="goalList" class="panel goal-panels">
-                </div>
+
+            <div id="goals" class="panel goal-panels collapse">
+
+                <!-- set if item based, per second/minute/hour -->
+            </div>
+            <div id="goalList" class="panel goal-panels collapse">
             </div>
         </div>
-        <div id="calculations">
+
+        <div class="panel panel-primary">
+            <div class="panel-heading link" data-toggle="collapse" data-target="#calculations">
+                Calculations
+            </div>
+            <div id="calculations" class="panel collapse list-group list-group-root well">
+            </div>
         </div>
+    </div>
     </div>
     <script src="/CoreFiles/CoreCalculator.js"></script>
     <script src="/controllers/BaseCtrl.js"></script>

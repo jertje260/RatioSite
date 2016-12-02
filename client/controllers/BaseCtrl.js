@@ -52,7 +52,7 @@ function BaseCtrl(app) {
             goalId = goalId.replace('Amount', '');
             self.changeAmount(goalId, amount);
         });
-        $('#calculations').on('click','.list-group-item', function () {
+        $('#calculations').on('click', '.list-group-item', function () {
             $('.glyphicon', this)
                 .toggleClass('glyphicon-chevron-right')
                 .toggleClass('glyphicon-chevron-down');
@@ -80,17 +80,17 @@ function BaseCtrl(app) {
                 self.categories[cat[j]].machines.push(self.data.assemblingMachines[i]);
             }
         }
+        self.data.rocketSilo.name = "rocket-silo";
         self.categories[self.data.rocketSilo.categories[0]] = {};
         self.categories[self.data.rocketSilo.categories[0]].machines = [];
         self.categories[self.data.rocketSilo.categories[0]].machines.push(self.data.rocketSilo);
 
         $("#buildings").empty();
         for (var prop in self.categories) {
-            if (self.categories[prop].machines.length > 1) {
-                var machine = self.findBestMachineForCategory(prop);
-                // add up for selection
-                self.addForMachineSelection(prop, machine.name);
-            }
+            var machine = self.findBestMachineForCategory(prop);
+            // add up for selection
+            self.addForMachineSelection(prop, machine.name);
+
         }
     }
 
@@ -190,44 +190,43 @@ function BaseCtrl(app) {
 
     self.showCalculated = function () {
         self.groupid = 1;
-        var htmlData = "<div class='list-group list-group-root well'>";
+        var htmlData = "" ;
         $("#calculations").empty();
         for (var c in self.calculated) {
-            htmlData += self.calculationsHtml(self.calculated[c] ,1);
+            htmlData += self.calculationsHtml(self.calculated[c], 1);
         }
-        htmlData += "</div>"
         $("#calculations").append(htmlData);
     }
 
     self.calculationsHtml = function (recipe, level) {
-        if(recipe === null){
+        if (recipe === null) {
             return;
         }
-        var html = ""; 
+        var html = "";
 
-        
+
         if (recipe.ingredients.length > 0) {
-            
+
             var first = true;
             for (var i = 0; i < recipe.ingredients.length; i++) {
                 if (recipe.ingredients[i] !== null) {
                     if (first) {
                         first = false;
-                        
-                        html += "<a href='#item" + self.groupid + "' class='list-group-item' data-toggle='collapse' style='padding-left: " + level*15 + "px'><i class='glyphicon glyphicon-chevron-right'></i>";
+
+                        html += "<a href='#item" + self.groupid + "' class='list-group-item' data-toggle='collapse' style='padding-left: " + level * 15 + "px'><i class='glyphicon glyphicon-chevron-right'></i>";
                         html += recipe.itemName + " Amount: " + recipe.crafts + "</a>";
                         html += "<div class='list-group collapse' id='item" + self.groupid++ + "'>";
                     }
 
-                    html += self.calculationsHtml(recipe.ingredients[i], level +1);
+                    html += self.calculationsHtml(recipe.ingredients[i], level + 1);
                 }
 
             }
             if (!first) {
                 html += "</div>";
             }
-        } else{
-            html += "<a class='list-group-item' style='padding-left: " +(14+ level*15) + "px'>" + recipe.itemName + " Amount: " + recipe.crafts + "</a>";
+        } else {
+            html += "<a class='list-group-item' style='padding-left: " + (14 + level * 15) + "px'>" + recipe.itemName + " Amount: " + recipe.crafts + "</a>";
         }
         return html;
     }
