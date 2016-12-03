@@ -7,6 +7,7 @@ function BaseCtrl(app) {
     self.calculated = {};
     self.groupid = 1;
     self.defaultMachines = [];
+    self.speed = -1;
 
     self.getDefaultJson = function () {
         $.get({
@@ -57,7 +58,18 @@ function BaseCtrl(app) {
                 .toggleClass('glyphicon-chevron-right')
                 .toggleClass('glyphicon-chevron-down');
         });
-
+        $('#speed').on('change', function(){
+            console.log($('#speed').val());
+            var type = $('#speed').val();
+            if(type === "ratios"){
+                self.speed = -1;
+            } else if(type === "per minute"){
+                self.speed = 60;
+            } else if(type === "per second"){
+                self.speed = 1;
+            }
+        });
+        
     }
 
     self.loadSearch = function () {
@@ -92,6 +104,10 @@ function BaseCtrl(app) {
             self.addForMachineSelection(prop, machine.name);
 
         }
+    }
+
+    self.getMachineForCategory = function(cat){
+
     }
 
     self.findBestMachineForCategory = function (cat) {
