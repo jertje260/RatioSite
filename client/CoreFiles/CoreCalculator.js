@@ -3,10 +3,13 @@ function CoreCalculator(ctrl) {
     self.output;
     self.time = 60;
 
-    self.calculateOnSpeed = function () {
-        if(ctrl.speed === -1){
-            return;
+    self.calculateOnSpeed = function (time) {
+        if (time !== undefined) {
+            self.time = time;
+        } else {
+            self.time = 60;
         }
+
         self.output = {};
         for (var i = 0; i < ctrl.goals.length; i++) {
             self.output[ctrl.goals[i].name] = self.calculateItemFromId(ctrl.goals[i].name, ctrl.goals[i].amount);
@@ -40,7 +43,6 @@ function CoreCalculator(ctrl) {
 
         }
         retObj.crafts = amount / resultAmount;
-        retObj.realCraftTime = self.calculateCraftTime(r, machine)
         retObj.name = r.name;
         retObj.itemName = itemId;
         
@@ -57,24 +59,6 @@ function CoreCalculator(ctrl) {
         // machineCount
         // item amount
         // craftspeed
-
-    }
-
-    self.calculateCraftTime = function(recipe, machine){
-        var returnVal = recipe.energy / self.calculateCraftSpeed(machine);
-        return returnVal;
-    }
-
-    self.calculateCraftSpeed = function(machine){
-
-        var moduleModifier = 1;
-        if(machine.modules != undefined && machine.moduleSlots != undefined){
-            for(var i = 0; i < machine.moduleSlots.length; i++){
-               moduleModifier += machine.moduleSlots[i].effects.speed;
-            }
-
-        }
-        return machine.speed * moduleModifier;
 
     }
 
