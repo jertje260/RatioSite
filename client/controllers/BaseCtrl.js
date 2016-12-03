@@ -69,7 +69,25 @@ function BaseCtrl(app) {
                 self.speed = 1;
             }
         });
-        
+        $("#buildings").on('change', '.machines', function(){
+            console.log($(this).val());
+            var obj = $(this);
+            self.changeDefaultMachineForCategory(obj.attr('id'), obj.val());
+        });
+        $("#calculateEverything").on('click', function(){
+            self.calculate();
+        });
+    }
+
+    self.changeDefaultMachineForCategory = function(cat, machineName){
+        var machine;
+        for(var i =0; i < self.categories[cat].machines.length; i++){
+            if(self.categories[ca].machines[i].name === machineName){
+                machine = self.categories[ca].machines[i];
+                break;
+            }
+        }
+        self.categories[cat].default = machine;
     }
 
     self.loadSearch = function () {
@@ -100,6 +118,7 @@ function BaseCtrl(app) {
         $("#buildings").empty();
         for (var prop in self.categories) {
             var machine = self.findBestMachineForCategory(prop);
+            self.categories[prop].default = machine;
             // add up for selection
             self.addForMachineSelection(prop, machine.name);
 
