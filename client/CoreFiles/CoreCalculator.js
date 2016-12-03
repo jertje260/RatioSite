@@ -3,13 +3,10 @@ function CoreCalculator(ctrl) {
     self.output;
     self.time = 60;
 
-    self.calculateOnSpeed = function (time) {
-        if (time !== undefined) {
-            self.time = time;
-        } else {
-            self.time = 60;
+    self.calculateOnSpeed = function () {
+        if (ctrl.speed === -1) {
+            return;
         }
-
         self.output = {};
         for (var i = 0; i < ctrl.goals.length; i++) {
             self.output[ctrl.goals[i].name] = self.calculateItemFromId(ctrl.goals[i].name, ctrl.goals[i].amount);
@@ -19,6 +16,11 @@ function CoreCalculator(ctrl) {
 
     self.calculateRatios = function () {
         self.output = {};
+    }
+
+    self.getMachineByCategory = function(category){
+        console.log(category);
+        return ctrl.categories[category].default;
     }
 
     self.calculateItemFromId = function (itemId, amount) {
@@ -33,19 +35,21 @@ function CoreCalculator(ctrl) {
         } else if (r.results !== undefined) {
             for (var i = 0; i < r.results.length; i++) {
                 if (r.results[i].name == itemId) {
-                    if(r.results[i].amount !== undefined){
+                    if (r.results[i].amount !== undefined) {
                         resultAmount = r.results[i].amount;
-                    } else if(r.results[i].amountMin !== undefined){
+                    } else if (r.results[i].amountMin !== undefined) {
                         resultAmount = r.results[i].amountMin;
                     }
                 }
             }
 
         }
-        retObj.crafts = amount / resultAmount;
+        retObj.machine = self.getMachineByCategory(r.category);
+        retObj.crafts = amount / resultAmount * self.calculateProductivityBonus(retObj.machine);
+        retObj.realCraftTime = self.calculateCraftTime(r, retObj.machine)
         retObj.name = r.name;
         retObj.itemName = itemId;
-        
+
 
         //var craftspeed = self.calculateCraftSpeed()
         retObj.ingredients = [];
@@ -59,6 +63,37 @@ function CoreCalculator(ctrl) {
         // machineCount
         // item amount
         // craftspeed
+
+    }
+
+    self.calculateCraftTime = function (recipe, machine) {
+        var returnVal = recipe.energy / self.calculateCraftSpeed(machine);
+        return returnVal;
+    }
+
+    self.calculateProductivityBonus = function(machine){
+        var bonus = 1;
+         if (machine.modules != undefined && machine.moduleSlots != undefined) {
+            for (var i = 0; i < machine.moduleSlots.length; i++) {
+                if (machine.moduleSlots[i].productivity != undefined) {
+                    moduleModifier += machine.moduleSlots[i].effects.productivity;
+                }
+            }
+            
+        }
+    }
+
+    self.calculateCraftSpeed = function (machine) {
+        var moduleModifier = 1;
+        if (machine.modules != undefined && machine.moduleSlots != undefined) {
+            for (var i = 0; i < machine.moduleSlots.length; i++) {
+                if (machine.moduleSlots[i].speed != undefined) {
+                    moduleModifier += machine.moduleSlots[i].effects.speed;
+                }
+            }
+
+        }
+        return machine.speed * moduleModifier;
 
     }
 
