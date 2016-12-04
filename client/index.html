@@ -13,6 +13,7 @@
     <!-- Latest compiled and minified JavaScript -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
         crossorigin="anonymous"></script>
+        <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery.form/3.51/jquery.form.min.js"></script>
     <link rel="stylesheet" href="/css/base.css">
 </head>
 
@@ -32,14 +33,14 @@
     </div>
 
     <div id="newModSet">
-        <form ref='uploadForm' id='uploadForm' method='post' encType="multipart/form-data">
-            <input type="file" name="sampleFile" />
+        <form id='uploadForm' method='post' encType="multipart/form-data" action="/calc/data">
+            <input id="file" type="file" name="sampleFile" />
             <input type="text" name="modSet" placeholder="Name for set of mods" />
-            <input type='submit' value='Upload!' />
+            <input type="submit" id="newMod" class="btn btn-default" name="Upload logFile"/>
         </form>
     </div>
     <button class="btn btn-default" id="calculateEverything">Calculate</button>
-    <div class="container">'
+    <div class="container">
         <div class="panel panel-primary">
             <div class="panel-heading link" data-toggle="collapse" data-target="#buildings">
                 Categories with their default machines.
@@ -55,9 +56,9 @@
 
             <div id="goals" class="panel goal-panels collapse">
                 <select id="speed" class="form-control">
-                    <option id="ratio">ratios</option>
-                    <option id="min">per minute</option>
+                    <option id="min" selected>per minute</option>
                     <option id="sec">per second</option>
+                    <option id="ratio">ratios</option>
                 </select>
             </div>
             <div id="goalList" class="panel goal-panels collapse">
@@ -77,8 +78,6 @@
     <script src="/CoreFiles/CoreCalculator.js"></script>
     <script src="/controllers/BaseCtrl.js"></script>
     <script src="/App.js"></script>
-    <script>
-    </script>
 </body>
 
 </html>

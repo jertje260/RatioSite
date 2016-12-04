@@ -7,7 +7,8 @@ function BaseCtrl(app) {
     self.calculated = {};
     self.groupid = 1;
     self.defaultMachines = [];
-    self.speed = -1;
+    self.speed = 60;
+    self.files;
 
     self.getDefaultJson = function () {
         $.get({
@@ -20,9 +21,38 @@ function BaseCtrl(app) {
             },
             error: function (err) {
                 console.log(err);
-                alert(err);
+                alert("Something went wrong. Please report this to DutchJer. With your logfile");
             }
         })
+    }
+
+    self.getJson = function(event){
+        event.stopPropagation();
+        event.preventDefault(); 
+        $("#uploadForm").ajaxSubmit({
+            success: function(data){
+                console.log(data);
+                self.data = data;
+                self.loadSearch();
+                self.loadBuildings();
+            },
+            error : function(err){
+                console.log(err);
+                alert("Something went wrong. Please report this to DutchJer. With your logfile");
+            }
+        })
+
+        // var fileData = $("#file").prop('files')[0];
+        // var data = new FormData();
+        // data.append('file', fileData);
+        // $.ajax({
+        //     url: '/calc/data',
+        //     type: 'POST',
+        //     data: data,
+        //     dataType: 'JSON',
+        //     // enctype: 'multipart/form-data',
+            
+        // })
     }
 
     self.init = function () {
@@ -77,13 +107,20 @@ function BaseCtrl(app) {
         $("#calculateEverything").on('click', function(){
             self.calculate();
         });
+        $('input[type=file]').on('change', function(event){
+            self.files = event.target.files;
+        })
+        $("#newModSet").on('submit', function(event){
+            self.getJson(event);
+            return false;
+        });
     }
 
     self.changeDefaultMachineForCategory = function(cat, machineName){
         var machine;
         for(var i =0; i < self.categories[cat].machines.length; i++){
-            if(self.categories[ca].machines[i].name === machineName){
-                machine = self.categories[ca].machines[i];
+            if(self.categories[cat].machines[i].name === machineName){
+                machine = self.categories[cat].machines[i];
                 break;
             }
         }
@@ -101,13 +138,23 @@ function BaseCtrl(app) {
 
     self.loadBuildings = function () {
         for (var i = 0; i < self.data.assemblingMachines.length; i++) {
-            var cat = self.data.assemblingMachines[i].categories
+            var cat = self.data.assemblingMachines[i].categories;
             for (var j = 0; j < cat.length; j++) {
                 if (self.categories[cat[j]] === undefined) {
                     self.categories[cat[j]] = {};
                     self.categories[cat[j]].machines = [];
                 }
                 self.categories[cat[j]].machines.push(self.data.assemblingMachines[i]);
+            }
+        }
+        for (var i = 0; i < self.data.miningDrills.length; i++) {
+            var cat = self.data.miningDrills[i].categories;
+            for (var j = 0; j < cat.length; j++) {
+                if (self.categories[cat[j]] === undefined) {
+                    self.categories[cat[j]] = {};
+                    self.categories[cat[j]].machines = [];
+                }
+                self.categories[cat[j]].machines.push(self.data.miningDrills[i]);
             }
         }
         self.data.rocketSilo.name = "rocket-silo";
@@ -249,7 +296,7 @@ function BaseCtrl(app) {
                         first = false;
 
                         html += "<a href='#item" + self.groupid + "' class='list-group-item' data-toggle='collapse' style='padding-left: " + level * 15 + "px'><i class='glyphicon glyphicon-chevron-right'></i>";
-                        html += recipe.itemName + " Amount: " + recipe.crafts + "</a>";
+                        html += recipe.itemName + " Amount: " + recipe.crafts + " CraftTime: "  + Math.round(100*recipe.realCraftTime)/100 + " " + self.nameToNiceName(recipe.machine.name) + " Count: " + recipe.machineCount + " </a>";
                         html += "<div class='list-group collapse' id='item" + self.groupid++ + "'>";
                     }
 
@@ -261,7 +308,7 @@ function BaseCtrl(app) {
                 html += "</div>";
             }
         } else {
-            html += "<a class='list-group-item' style='padding-left: " + (14 + level * 15) + "px'>" + recipe.itemName + " Amount: " + recipe.crafts + "</a>";
+            html += "<a class='list-group-item' style='padding-left: " + (14 + level * 15) + "px'>" + recipe.itemName + " Amount: " + recipe.crafts  + " CraftTime: "  + Math.round(100*recipe.realCraftTime)/100 + " " + self.nameToNiceName(recipe.machine.name) + " Count: " + recipe.machineCount +  "</a>";
         }
         return html;
     }
