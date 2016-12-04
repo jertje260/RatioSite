@@ -121,7 +121,7 @@ function readFile(filepath, callback) {
 }
 
 function getDataString(data) {
-  var r = 'Script data-final-fixes.lua:347: ';
+  var r = /Script data-final-fixes.lua:\d+: /;
   var match;
   for (var i = 0; i < data.length; i++) {
     match = data[i].split(r)[1];
@@ -136,6 +136,7 @@ function getDataString(data) {
 }
 
 function updateTechs(obj) {
+  console.log(obj.length);
   for (var i = 0; i < obj.technologies.length; i++) {
     var t = obj.technologies[i];
     if (t.effects !== undefined) {
@@ -145,7 +146,7 @@ function updateTechs(obj) {
       }
     }
   }
-  obj.technologies = null;
+  //obj.technologies = null;
   return obj;
 }
 

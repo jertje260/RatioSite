@@ -44,6 +44,10 @@ function CoreCalculator(ctrl) {
             }
 
         }
+        if(r.category == undefined){
+            console.log(itemId);
+            console.log(r);
+        }
         retObj.machine = self.getMachineByCategory(r.category);
         retObj.crafts = amount / resultAmount * self.calculateProductivityBonus(retObj.machine);
         retObj.realCraftTime = self.calculateCraftTime(r, retObj.machine)
