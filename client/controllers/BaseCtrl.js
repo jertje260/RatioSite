@@ -264,9 +264,14 @@ function BaseCtrl(app) {
     }
 
     self.calculate = function () {
+        try{
         self.calculated = {};
         self.calculated = self.calculator.calculateOnSpeed();
         self.showCalculated();
+        } catch(err){
+            console.log(err);
+            alert("something went wrong please inform DutchJer\n" + err)
+        }
     }
 
 
