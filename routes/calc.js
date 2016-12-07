@@ -63,10 +63,14 @@ function fileToJson(filepath, callback) {
     console.log('length: ' + array.length);
     var newData = getDataString(array);
     //console.log(data.toString())
+    try{
     var obj = JSON.parse(newData);
     var returnVal = updateTechs(obj);
     var rVal = updateRecipes(returnVal);
     var retVal = createItems(rVal);
+    } catch(err){
+      callback(null, err);
+    }
     callback(retVal, null);
 
   });
