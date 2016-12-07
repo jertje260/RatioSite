@@ -148,9 +148,7 @@ function CoreCalculator(ctrl) {
 
         for (var i = 0; i < recipes.length; i++) {
             if (recipes[i].isCircular === undefined) {
-                if (recipes[i].result === id) {
-                    return recipes[i];
-                } else if (recipes[i].results !== undefined) {
+                if (recipes[i].results !== undefined) {
                     for (var j = 0; j < recipes[i].results.length; j++) {
                         if (recipes[i].results[j].name == id) {
                             return recipes[i];
@@ -162,37 +160,37 @@ function CoreCalculator(ctrl) {
         return null;
     }
 
-    self.findRecipesByItemId = function (id) {
-        var recipes = ctrl.data.recipes;
-        var rs = [];
+    // self.findRecipesByItemId = function (id) {
+    //     var recipes = ctrl.data.recipes;
+    //     var rs = [];
 
-        var resources = ctrl.data.resources;
+    //     var resources = ctrl.data.resources;
 
-        for (var i = 0; i < resources.length; i++) {
-            if (resources[i].result === id) {
-                rs.push(resources[i]);
-            } else if (resources[i].results !== undefined) {
-                for (var j = 0; j < resources[i].results.length; j++) {
-                    if (resources[i].results[j].name == id) {
-                        rs.push(resources[i]);
-                    }
-                }
-            }
-        }
+    //     for (var i = 0; i < resources.length; i++) {
+    //         if (resources[i].result === id) {
+    //             rs.push(resources[i]);
+    //         } else if (resources[i].results !== undefined) {
+    //             for (var j = 0; j < resources[i].results.length; j++) {
+    //                 if (resources[i].results[j].name == id) {
+    //                     rs.push(resources[i]);
+    //                 }
+    //             }
+    //         }
+    //     }
 
-        for (var i = 0; i < recipes.length; i++) {
-            if (recipes[i].result === id) {
-                rs.push(recipes[i]);
-            } else if (recipes[i].results !== undefined) {
-                for (var j = 0; j < recipes[i].results.length; j++) {
-                    if (recipes[i].results[j].name == id) {
-                        rs.push(recipes[i]);
-                    }
-                }
-            }
-        }
-        return rs;
-    }
+    //     for (var i = 0; i < recipes.length; i++) {
+    //         if (recipes[i].result === id) {
+    //             rs.push(recipes[i]);
+    //         } else if (recipes[i].results !== undefined) {
+    //             for (var j = 0; j < recipes[i].results.length; j++) {
+    //                 if (recipes[i].results[j].name == id) {
+    //                     rs.push(recipes[i]);
+    //                 }
+    //             }
+    //         }
+    //     }
+    //     return rs;
+    // }
 
     self.findRecipeById = function (id) {
         var recipes = ctrl.data.recipes;

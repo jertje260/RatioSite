@@ -15,7 +15,7 @@ function BaseCtrl(app) {
             url: '/calc/vanilla',
             success: function (data) {
                 self.data = data;
-                //self.findReverseRecipes();
+                self.findReverseRecipes();
                 self.loadSearch();
                 self.loadBuildings();
                 console.log(self.data);
@@ -67,6 +67,12 @@ function BaseCtrl(app) {
             if (self.data.recipes[i].isCircular === undefined) {
                 for (var j = 0; j < self.data.recipes.length; j++) {
                     if (i !== j) {
+                        if(self.data.recipes[i].name.startsWith("fill") && self.data.recipes[j].name.startsWith("empty")){
+                            console.log(JSON.stringify(self.data.recipes[i].results));
+                            console.log(JSON.stringify(self.data.recipes[j].ingredients));
+                            console.log(JSON.stringify(self.data.recipes[j].results));
+                            console.log(JSON.stringify(self.data.recipes[i].ingredients));
+                        }
                         if (((self.data.recipes[i].results !== undefined && self.data.recipes[j].results !== undefined) || (self.data.recipes[i].ingredients.length === 1 && self.data.recipes[j].result !== undefined))) {
                             if (JSON.stringify(self.data.recipes[i].ingredients) === JSON.stringify(self.data.recipes[j].results) && JSON.stringify(self.data.recipes[j].ingredients) === JSON.stringify(self.data.recipes[i].results)) {
                                 self.data.recipes[i].isCircular = true;
@@ -79,6 +85,19 @@ function BaseCtrl(app) {
         }
     }
 
+    self.compareRecipesForCirculation = function(r1,r2){
+        if(r1.ingredients.length === r2.results.length && r2.ingredients.length === r1.results.length){
+            var res = true;
+            for(var i =0; i < r1.ingredients.length;i++){
+                // check if other array contains this value, then compare.
+            }
+
+
+
+        }
+        return false;
+    }
+
     self.getCircularRecipes = function () {
         var res = [];
         for (var i = 0; i < self.data.recipes.length; i++) {
@@ -86,6 +105,7 @@ function BaseCtrl(app) {
                 res.push(self.data.recipes[i]);
             }
         }
+        return res;
     }
 
     self.addListeners = function () {
@@ -292,9 +312,14 @@ function BaseCtrl(app) {
     }
 
     self.calculate = function () {
+        try{
         self.calculated = {};
         self.calculated = self.calculator.calculateOnSpeed();
         self.showCalculated();
+        } catch(err){
+            console.log(err);
+            alert("something went wrong please inform DutchJer\n" + err)
+        }
     }
 
 
