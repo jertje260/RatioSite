@@ -85,18 +85,6 @@ function BaseCtrl(app) {
         }
     }
 
-    self.compareRecipesForCirculation = function(r1,r2){
-        if(r1.ingredients.length === r2.results.length && r2.ingredients.length === r1.results.length){
-            var res = true;
-            for(var i =0; i < r1.ingredients.length;i++){
-                // check if other array contains this value, then compare.
-            }
-
-
-
-        }
-        return false;
-    }
 
     self.getCircularRecipes = function () {
         var res = [];
