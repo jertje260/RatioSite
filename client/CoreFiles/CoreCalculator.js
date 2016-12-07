@@ -33,11 +33,11 @@ function CoreCalculator(ctrl) {
 
         if (res !== null) {
             // its a resources
-            if(res.result !== undefined){
+            if (res.result !== undefined) {
                 res.category = "basic-solid";
-            } else if(res.results !== undefined){
-                for(var i = 0; i < res.results.length; i++){
-                    if(res.results[i].type === "fluid"){
+            } else if (res.results !== undefined) {
+                for (var i = 0; i < res.results.length; i++) {
+                    if (res.results[i].type === "fluid") {
                         res.category = "basic-fluid";
                     } else {
                         res.category = "basic-solid";
@@ -70,9 +70,9 @@ function CoreCalculator(ctrl) {
         retObj.crafts = amount / retObj.resultCount;
         retObj.realCraftTime = self.calculateCraftTime(obj, retObj.machine);
         retObj.itemName = itemId;
-        retObj.craftsPerSecond = 1/retObj.realCraftTime;
+        retObj.craftsPerSecond = 1 / retObj.realCraftTime;
         retObj.outputPerSecond = retObj.craftsPerSecond * retObj.resultCount;
-        retObj.machineCount = Math.ceil((amount/ctrl.speed)/retObj.outputPerSecond); 
+        retObj.machineCount = Math.ceil((amount / ctrl.speed) / retObj.outputPerSecond);
 
         retObj.ingredients = [];
         if (obj.ingredients !== undefined) {
@@ -89,12 +89,12 @@ function CoreCalculator(ctrl) {
     }
 
     self.calculateCraftTime = function (recipe, machine) {
-        if(machine.speed !== undefined && machine.power !== undefined){
+        if (machine.speed !== undefined && machine.power !== undefined) {
             var leftoverpower = machine.power - recipe.hardness;
             var craftSpeed = self.calculateCraftSpeed(machine);
-            var result = recipe.miningTime / (leftoverpower*craftSpeed);
+            var result = recipe.miningTime / (leftoverpower * craftSpeed);
             return result;
-        }else {
+        } else {
             return recipe.energy / self.calculateCraftSpeed(machine);
         }
     }
@@ -147,12 +147,14 @@ function CoreCalculator(ctrl) {
         var recipes = ctrl.data.recipes;
 
         for (var i = 0; i < recipes.length; i++) {
-            if (recipes[i].result === id) {
-                return recipes[i];
-            } else if (recipes[i].results !== undefined) {
-                for (var j = 0; j < recipes[i].results.length; j++) {
-                    if (recipes[i].results[j].name == id) {
-                        return recipes[i];
+            if (recipes[i].isCircular === undefined) {
+                if (recipes[i].result === id) {
+                    return recipes[i];
+                } else if (recipes[i].results !== undefined) {
+                    for (var j = 0; j < recipes[i].results.length; j++) {
+                        if (recipes[i].results[j].name == id) {
+                            return recipes[i];
+                        }
                     }
                 }
             }

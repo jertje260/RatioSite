@@ -14,10 +14,11 @@ function BaseCtrl(app) {
         $.get({
             url: '/calc/vanilla',
             success: function (data) {
-                console.log(data);
                 self.data = data;
+                //self.findReverseRecipes();
                 self.loadSearch();
                 self.loadBuildings();
+                console.log(self.data);
             },
             error: function (err) {
                 console.log(err);
@@ -26,17 +27,18 @@ function BaseCtrl(app) {
         })
     }
 
-    self.getJson = function(event){
+    self.getJson = function (event) {
         event.stopPropagation();
-        event.preventDefault(); 
+        event.preventDefault();
         $("#uploadForm").ajaxSubmit({
-            success: function(data){
+            success: function (data) {
                 console.log(data);
                 self.data = data;
+                self.findReverseRecipes();
                 self.loadSearch();
                 self.loadBuildings();
             },
-            error : function(err){
+            error: function (err) {
                 console.log(err);
                 alert("Something went wrong. Please report this to DutchJer. With your logfile");
             }
@@ -51,13 +53,39 @@ function BaseCtrl(app) {
         //     data: data,
         //     dataType: 'JSON',
         //     // enctype: 'multipart/form-data',
-            
+
         // })
     }
 
     self.init = function () {
         self.addListeners();
         self.getDefaultJson();
+    }
+
+    self.findReverseRecipes = function () {
+        for (var i = 0; i < self.data.recipes.length; i++) {
+            if (self.data.recipes[i].isCircular === undefined) {
+                for (var j = 0; j < self.data.recipes.length; j++) {
+                    if (i !== j) {
+                        if (((self.data.recipes[i].results !== undefined && self.data.recipes[j].results !== undefined) || (self.data.recipes[i].ingredients.length === 1 && self.data.recipes[j].result !== undefined))) {
+                            if (JSON.stringify(self.data.recipes[i].ingredients) === JSON.stringify(self.data.recipes[j].results) && JSON.stringify(self.data.recipes[j].ingredients) === JSON.stringify(self.data.recipes[i].results)) {
+                                self.data.recipes[i].isCircular = true;
+                                self.data.recipes[j].isCircular = true;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    self.getCircularRecipes = function () {
+        var res = [];
+        for (var i = 0; i < self.data.recipes.length; i++) {
+            if (self.data.recipes[i].isCircular !== undefined && self.data.recipes[i].isCircular) {
+                res.push(self.data.recipes[i]);
+            }
+        }
     }
 
     self.addListeners = function () {
@@ -88,38 +116,38 @@ function BaseCtrl(app) {
                 .toggleClass('glyphicon-chevron-right')
                 .toggleClass('glyphicon-chevron-down');
         });
-        $('#speed').on('change', function(){
+        $('#speed').on('change', function () {
             console.log($('#speed').val());
             var type = $('#speed').val();
-            if(type === "ratios"){
+            if (type === "ratios") {
                 self.speed = -1;
-            } else if(type === "per minute"){
+            } else if (type === "per minute") {
                 self.speed = 60;
-            } else if(type === "per second"){
+            } else if (type === "per second") {
                 self.speed = 1;
             }
         });
-        $("#buildings").on('change', '.machines', function(){
+        $("#buildings").on('change', '.machines', function () {
             console.log($(this).val());
             var obj = $(this);
             self.changeDefaultMachineForCategory(obj.attr('id'), obj.val());
         });
-        $("#calculateEverything").on('click', function(){
+        $("#calculateEverything").on('click', function () {
             self.calculate();
         });
-        $('input[type=file]').on('change', function(event){
+        $('input[type=file]').on('change', function (event) {
             self.files = event.target.files;
         })
-        $("#newModSet").on('submit', function(event){
+        $("#newModSet").on('submit', function (event) {
             self.getJson(event);
             return false;
         });
     }
 
-    self.changeDefaultMachineForCategory = function(cat, machineName){
+    self.changeDefaultMachineForCategory = function (cat, machineName) {
         var machine;
-        for(var i =0; i < self.categories[cat].machines.length; i++){
-            if(self.categories[cat].machines[i].name === machineName){
+        for (var i = 0; i < self.categories[cat].machines.length; i++) {
+            if (self.categories[cat].machines[i].name === machineName) {
                 machine = self.categories[cat].machines[i];
                 break;
             }
@@ -172,7 +200,7 @@ function BaseCtrl(app) {
         }
     }
 
-    self.getMachineForCategory = function(cat){
+    self.getMachineForCategory = function (cat) {
 
     }
 
@@ -272,7 +300,7 @@ function BaseCtrl(app) {
 
     self.showCalculated = function () {
         self.groupid = 1;
-        var htmlData = "" ;
+        var htmlData = "";
         $("#calculations").empty();
         for (var c in self.calculated) {
             htmlData += self.calculationsHtml(self.calculated[c], 1);
@@ -296,7 +324,7 @@ function BaseCtrl(app) {
                         first = false;
 
                         html += "<a href='#item" + self.groupid + "' class='list-group-item' data-toggle='collapse' style='padding-left: " + level * 15 + "px'><i class='glyphicon glyphicon-chevron-right'></i>";
-                        html += recipe.itemName + " Amount: " + recipe.crafts + " CraftTime: "  + Math.round(100*recipe.realCraftTime)/100 + " " + self.nameToNiceName(recipe.machine.name) + " Count: " + recipe.machineCount + " </a>";
+                        html += recipe.itemName + " Amount: " + recipe.crafts + " CraftTime: " + Math.round(100 * recipe.realCraftTime) / 100 + " " + self.nameToNiceName(recipe.machine.name) + " Count: " + recipe.machineCount + " </a>";
                         html += "<div class='list-group collapse' id='item" + self.groupid++ + "'>";
                     }
 
@@ -308,7 +336,7 @@ function BaseCtrl(app) {
                 html += "</div>";
             }
         } else {
-            html += "<a class='list-group-item' style='padding-left: " + (14 + level * 15) + "px'>" + recipe.itemName + " Amount: " + recipe.crafts  + " CraftTime: "  + Math.round(100*recipe.realCraftTime)/100 + " " + self.nameToNiceName(recipe.machine.name) + " Count: " + recipe.machineCount +  "</a>";
+            html += "<a class='list-group-item' style='padding-left: " + (14 + level * 15) + "px'>" + recipe.itemName + " Amount: " + recipe.crafts + " CraftTime: " + Math.round(100 * recipe.realCraftTime) / 100 + " " + self.nameToNiceName(recipe.machine.name) + " Count: " + recipe.machineCount + "</a>";
         }
         return html;
     }
