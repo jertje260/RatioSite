@@ -9,29 +9,30 @@ function BaseCtrl(app) {
     self.defaultMachines = [];
     self.speed = 60;
     self.files;
+    self.totals = [];
 
-    self.getDefaultJson = function() {
+    self.getDefaultJson = function () {
         $.get({
             url: '/calc/vanilla',
-            success: function(data) {
+            success: function (data) {
                 self.data = data;
                 self.findReverseRecipes();
                 self.loadSearch();
                 self.loadBuildings();
                 console.log(self.data);
             },
-            error: function(err) {
+            error: function (err) {
                 console.log(err);
                 alert("Something went wrong. Please report this to DutchJer. With your logfile");
             }
         })
     }
 
-    self.getJson = function(event) {
+    self.getJson = function (event) {
         event.stopPropagation();
         event.preventDefault();
         $("#uploadForm").ajaxSubmit({
-            success: function(data) {
+            success: function (data) {
                 if (JSON.stringify(data) !== "{}") {
                     console.log(data);
                     self.data = data;
@@ -40,7 +41,7 @@ function BaseCtrl(app) {
                     self.loadBuildings();
                 }
             },
-            error: function(err) {
+            error: function (err) {
                 console.log(err);
                 alert("Something went wrong. Please report this to DutchJer. With your logfile");
             }
@@ -59,12 +60,12 @@ function BaseCtrl(app) {
         // })
     }
 
-    self.init = function() {
+    self.init = function () {
         self.addListeners();
         self.getDefaultJson();
     }
 
-    self.findReverseRecipes = function() {
+    self.findReverseRecipes = function () {
         for (var i = 0; i < self.data.recipes.length; i++) {
             if (self.data.recipes[i].isCircular === undefined) {
                 for (var j = 0; j < self.data.recipes.length; j++) {
@@ -88,7 +89,36 @@ function BaseCtrl(app) {
     }
 
 
-    self.getCircularRecipes = function() {
+    self.getTotalCountAllForRecipes = function () {
+        self.totals = [];
+        if (self.calculated !== undefined) {
+            for (var prop in self.calculated) {
+                self.getTotalCountForRecipe(self.calculated[prop]);
+            }
+        }
+        console.log(self.totals);
+    }
+
+    self.getTotalCountForRecipe = function (recipe) {
+        if (recipe !== null && recipe !== undefined) {
+            if (!self.totals.hasOwnProperty(recipe.itemName)) {
+                self.totals[recipe.itemName] = recipe;
+            } else {
+                self.totals[recipe.itemName].amount += recipe.amount;
+                self.totals[recipe.itemName].crafts += recipe.crafts;
+                self.totals[recipe.itemName].machineCount += recipe.machineCount;
+                self.totals[recipe.itemName].amountPerSecond = self.totals[recipe.itemName].amount / self.speed;
+            }
+            if (recipe.ingredients !== null && recipe.ingredients !== undefined) {
+                for (var i = 0; i < recipe.ingredients.length; i++) {
+                    self.getTotalCountForRecipe(recipe.ingredients[i]);
+                }
+            }
+        }
+
+    }
+
+    self.getCircularRecipes = function () {
         var res = [];
         for (var i = 0; i < self.data.recipes.length; i++) {
             if (self.data.recipes[i].isCircular !== undefined && self.data.recipes[i].isCircular) {
@@ -98,8 +128,8 @@ function BaseCtrl(app) {
         return res;
     }
 
-    self.addListeners = function() {
-        $("#addRecipe").click(function() {
+    self.addListeners = function () {
+        $("#addRecipe").click(function () {
             var option = $('option[value="' + $("#searchBar").val() + '"]');
             var id = option.attr('id');
             var item = {};
@@ -109,24 +139,24 @@ function BaseCtrl(app) {
             self.addGoalHtml(item);
             $("#searchBar").val("");
         });
-        $("#goalList").on('click', '.removeGoal', function() {
+        $("#goalList").on('click', '.removeGoal', function () {
             var goalId = $(this).attr('id');
             goalId = goalId.replace('remove', '');
             self.removeGoalById(goalId)
 
         });
-        $("#goalList").on('keyup mouseup', '.amount', function() {
+        $("#goalList").on('keyup mouseup', '.amount', function () {
             var goalId = $(this).attr('id');
             var amount = parseInt($(this).val());
             goalId = goalId.replace('Amount', '');
             self.changeAmount(goalId, amount);
         });
-        $('#calculations').on('click', '.list-group-item', function() {
+        $('#calculations').on('click', '.list-group-item', function () {
             $('.glyphicon', this)
                 .toggleClass('glyphicon-chevron-right')
                 .toggleClass('glyphicon-chevron-down');
         });
-        $('#speed').on('change', function() {
+        $('#speed').on('change', function () {
             console.log($('#speed').val());
             var type = $('#speed').val();
             if (type === "ratios") {
@@ -137,24 +167,24 @@ function BaseCtrl(app) {
                 self.speed = 1;
             }
         });
-        $("#buildings").on('change', '.machines', function() {
+        $("#buildings").on('change', '.machines', function () {
             console.log($(this).val());
             var obj = $(this);
             self.changeDefaultMachineForCategory(obj.attr('id'), obj.val());
         });
-        $("#calculateEverything").on('click', function() {
+        $("#calculateEverything").on('click', function () {
             self.calculate();
         });
-        $('input[type=file]').on('change', function(event) {
+        $('input[type=file]').on('change', function (event) {
             self.files = event.target.files;
         })
-        $("#newModSet").on('submit', function(event) {
+        $("#newModSet").on('submit', function (event) {
             self.getJson(event);
             return false;
         });
     }
 
-    self.changeDefaultMachineForCategory = function(cat, machineName) {
+    self.changeDefaultMachineForCategory = function (cat, machineName) {
         var machine;
         for (var i = 0; i < self.categories[cat].machines.length; i++) {
             if (self.categories[cat].machines[i].name === machineName) {
@@ -165,7 +195,7 @@ function BaseCtrl(app) {
         self.categories[cat].default = machine;
     }
 
-    self.loadSearch = function() {
+    self.loadSearch = function () {
         var list = $("#recipesList");
         for (var i = 0; i < self.data.items.length; i++) {
             var id = self.data.items[i];
@@ -174,7 +204,7 @@ function BaseCtrl(app) {
         }
     }
 
-    self.loadBuildings = function() {
+    self.loadBuildings = function () {
         for (var i = 0; i < self.data.assemblingMachines.length; i++) {
             var cat = self.data.assemblingMachines[i].categories;
             for (var j = 0; j < cat.length; j++) {
@@ -210,11 +240,11 @@ function BaseCtrl(app) {
         }
     }
 
-    self.getMachineForCategory = function(cat) {
+    self.getMachineForCategory = function (cat) {
 
     }
 
-    self.findBestMachineForCategory = function(cat) {
+    self.findBestMachineForCategory = function (cat) {
         var machine;
         for (var i = 0; i < self.categories[cat].machines.length; i++) {
             if (machine === undefined) {
@@ -228,8 +258,8 @@ function BaseCtrl(app) {
         return machine;
     }
 
-    self.addForMachineSelection = function(cat, defaultMachine) {
-        $.get("/html/select.html").done(function(data) {
+    self.addForMachineSelection = function (cat, defaultMachine) {
+        $.get("/html/select.html").done(function (data) {
             $("#buildings").append(data);
             $("#new").attr("id", cat);
             $("#newLabel").attr("id", cat + "Label");
@@ -248,8 +278,8 @@ function BaseCtrl(app) {
         });
     }
 
-    self.addGoalHtml = function(goal) {
-        $.get("/html/goal.html").done(function(data) {
+    self.addGoalHtml = function (goal) {
+        $.get("/html/goal.html").done(function (data) {
             $("#goalList").append(data);
             $("#goal").attr("id", "div" + goal.name);
             $("#newGoal").html(self.nameToNiceName(goal.name) + " amount:");
@@ -260,13 +290,13 @@ function BaseCtrl(app) {
         });
     }
 
-    self.removeGoalHtml = function(goal) {
-        $("#div" + goal.name).slideUp(200, function() {
+    self.removeGoalHtml = function (goal) {
+        $("#div" + goal.name).slideUp(200, function () {
             $("#div" + goal.name).remove();
         });
     }
 
-    self.removeGoalById = function(goalId) {
+    self.removeGoalById = function (goalId) {
         for (var i = 0; i < self.goals.length; i++) {
             if (self.goals[i].name === goalId) {
                 self.removeGoalHtml(self.goals[i]);
@@ -276,12 +306,12 @@ function BaseCtrl(app) {
         }
     }
 
-    self.nameToNiceName = function(name) {
+    self.nameToNiceName = function (name) {
         var n = name.replace(/-/g, ' ');
         return n;
     }
 
-    self.changeAmount = function(goalId, amount) {
+    self.changeAmount = function (goalId, amount) {
         for (var i = 0; i < self.goals.length; i++) {
             if (self.goals[i].name === goalId) {
                 self.goals[i].amount = amount;
@@ -290,7 +320,7 @@ function BaseCtrl(app) {
         }
     }
 
-    self.findItemById = function(input) {
+    self.findItemById = function (input) {
         var item
         for (var i = 0; i < self.data.recipes.length; i++) {
             if (self.data.recipes[i].name === input) {
@@ -301,19 +331,21 @@ function BaseCtrl(app) {
         return item;
     }
 
-    self.calculate = function() {
+    self.calculate = function () {
         try {
             self.calculated = {};
             self.calculated = self.calculator.calculateOnSpeed();
+            self.getTotalCountAllForRecipes();
             self.showCalculated();
         } catch (err) {
-            console.log(err);
-            alert("something went wrong please inform DutchJer\n" + err)
+            console.log(err.message);
+            console.log(err.stack)
+            alert("something went wrong please inform DutchJer\n" + err.message + "\n" + err.stack);
         }
     }
 
 
-    self.showCalculated = function() {
+    self.showCalculated = function () {
         self.groupid = 1;
         var htmlData = "";
         $("#calculations").empty();
@@ -323,7 +355,7 @@ function BaseCtrl(app) {
         $("#calculations").append(htmlData);
     }
 
-    self.calculationsHtml = function(recipe, level) {
+    self.calculationsHtml = function (recipe, level) {
         if (recipe === null) {
             return;
         }
