@@ -67,7 +67,7 @@ function CoreCalculator(ctrl) {
         retObj.amount = amount;
         retObj.machine = self.getMachineByCategory(obj.category);
         retObj.name = obj.name;
-        retObj.resultCount = resultAmount * self.calculateProductivityBonus(retObj.machine)
+        retObj.resultCount = resultAmount * self.calculateProductivityBonus(retObj.machine);
         retObj.crafts = amount / retObj.resultCount;
         retObj.realCraftTime = self.calculateCraftTime(obj, retObj.machine);
         retObj.itemName = itemId;
@@ -102,6 +102,11 @@ function CoreCalculator(ctrl) {
 
     self.calculateProductivityBonus = function (machine) {
         var bonus = 1;
+        // // bonus cheat
+        // if (machine.modules != undefined) {
+        //     bonus = 1 + machine.modules * 0.1;
+        // }
+        // // end cheat
         if (machine.modules != undefined && machine.moduleSlots != undefined) {
             for (var i = 0; i < machine.moduleSlots.length; i++) {
                 if (machine.moduleSlots[i].productivity != undefined) {
