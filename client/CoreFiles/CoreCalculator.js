@@ -45,25 +45,13 @@ function CoreCalculator(ctrl) {
                 }
             }
             obj = res;
-        } else {
+        } else if (r !== null) {
             // its a recipe
             obj = r;
         }
 
-        if (obj.result !== undefined) {
-            resultAmount = obj.resultCount != undefined ? obj.resultCount : 1;
-        } else if (obj.results !== undefined) {
-            for (var i = 0; i < obj.results.length; i++) {
-                if (obj.results[i].name == itemId) {
-                    if (obj.results[i].amount !== undefined) {
-                        resultAmount = obj.results[i].amount;
-                    } else if (obj.results[i].amountMin !== undefined) {
-                        resultAmount = obj.results[i].amountMin;
-                    }
-                }
-            }
+        resultAmount = self.getAmount(obj, itemId);
 
-        }
         retObj.amount = amount;
         retObj.machine = self.getMachineByCategory(obj.category);
         retObj.name = obj.name;
@@ -78,7 +66,12 @@ function CoreCalculator(ctrl) {
         retObj.ingredients = [];
         if (obj.ingredients !== undefined) {
             for (var i = 0; i < obj.ingredients.length; i++) {
-                retObj.ingredients[i] = self.calculateItemFromId(obj.ingredients[i].name, retObj.crafts * obj.ingredients[i].amount);
+                var x = self.calculateItemFromId(obj.ingredients[i].name, retObj.crafts * obj.ingredients[i].amount);
+                if (x !== null && Object.keys(x).length !== 0) {
+                    retObj.ingredients[i] = x;
+                } else {
+                    retObj.ingredients[i] = self.getObjectWithoutRecipe(obj.ingredients[i], retObj.crafts * obj.ingredients[i].amount);
+                }
             }
         }
         return retObj;
@@ -87,6 +80,15 @@ function CoreCalculator(ctrl) {
         // item amount
         // craftspeed
 
+    }
+
+    self.getObjectWithoutRecipe = function (obj, amount) {
+        var retObj = {};
+        retObj.amount = amount;
+        retObj.name = obj.name;
+        retObj.itemName = obj.name;
+        retObj.amountPerSecond = retObj.amount / ctrl.speed;
+        return retObj;
     }
 
     self.calculateCraftTime = function (recipe, machine) {
@@ -116,6 +118,23 @@ function CoreCalculator(ctrl) {
 
         }
         return bonus;
+    }
+
+    self.getAmount = function (obj, itemId) {
+        if (obj.result !== undefined) {
+            return obj.resultCount != undefined ? obj.resultCount : 1;
+        } else if (obj.results !== undefined) {
+            for (var i = 0; i < obj.results.length; i++) {
+                if (obj.results[i].name == itemId) {
+                    if (obj.results[i].amount !== undefined) {
+                        return obj.results[i].amount;
+                    } else if (obj.results[i].amountMin !== undefined) {
+                        return obj.results[i].amountMin;
+                    }
+                }
+            }
+
+        }
     }
 
     self.calculateCraftSpeed = function (machine) {

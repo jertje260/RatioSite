@@ -361,29 +361,32 @@ function BaseCtrl(app) {
         }
         var html = "";
 
+        if (recipe.ingredients !== undefined) {
+            if (recipe.ingredients.length > 0) {
 
-        if (recipe.ingredients.length > 0) {
+                var first = true;
+                for (var i = 0; i < recipe.ingredients.length; i++) {
+                    if (recipe.ingredients[i] !== null) {
+                        if (first) {
+                            first = false;
 
-            var first = true;
-            for (var i = 0; i < recipe.ingredients.length; i++) {
-                if (recipe.ingredients[i] !== null) {
-                    if (first) {
-                        first = false;
+                            html += "<a href='#item" + self.groupid + "' class='list-group-item' data-toggle='collapse' style='padding-left: " + level * 15 + "px'><i class='glyphicon glyphicon-chevron-right'></i>";
+                            html += recipe.itemName + " Amount: " + recipe.crafts + " CraftTime: " + Math.round(100 * recipe.realCraftTime) / 100 + " " + self.nameToNiceName(recipe.machine.name) + " Count: " + recipe.machineCount + " </a>";
+                            html += "<div class='list-group collapse' id='item" + self.groupid++ + "'>";
+                        }
 
-                        html += "<a href='#item" + self.groupid + "' class='list-group-item' data-toggle='collapse' style='padding-left: " + level * 15 + "px'><i class='glyphicon glyphicon-chevron-right'></i>";
-                        html += recipe.itemName + " Amount: " + recipe.crafts + " CraftTime: " + Math.round(100 * recipe.realCraftTime) / 100 + " " + self.nameToNiceName(recipe.machine.name) + " Count: " + recipe.machineCount + " </a>";
-                        html += "<div class='list-group collapse' id='item" + self.groupid++ + "'>";
+                        html += self.calculationsHtml(recipe.ingredients[i], level + 1);
                     }
 
-                    html += self.calculationsHtml(recipe.ingredients[i], level + 1);
                 }
-
-            }
-            if (!first) {
-                html += "</div>";
+                if (!first) {
+                    html += "</div>";
+                }
+            } else {
+                html += "<a class='list-group-item' style='padding-left: " + (14 + level * 15) + "px'>" + recipe.itemName + " Amount: " + recipe.crafts + " CraftTime: " + Math.round(100 * recipe.realCraftTime) / 100 + " " + self.nameToNiceName(recipe.machine.name) + " Count: " + recipe.machineCount + "</a>";
             }
         } else {
-            html += "<a class='list-group-item' style='padding-left: " + (14 + level * 15) + "px'>" + recipe.itemName + " Amount: " + recipe.crafts + " CraftTime: " + Math.round(100 * recipe.realCraftTime) / 100 + " " + self.nameToNiceName(recipe.machine.name) + " Count: " + recipe.machineCount + "</a>";
+            html += "<a class='list-group-item' style='padding-left: " + (14 + level * 15) + "px'>" + recipe.itemName + " Amount: " + recipe.amount + "</a>";
         }
         return html;
     }
